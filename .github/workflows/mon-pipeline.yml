@@ -1,13 +1,13 @@
 name: First Pipeline
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
 
 jobs:
   build:
   runs-on: ubuntu-latest
   steps:
-    -name: 'creation'
+    -name: creation
     -uses: actions/checkout@v4
 
   
@@ -17,7 +17,7 @@ jobs:
   steps:
   -name: 'Test'
   run: | 
-      if [- f 'index.html']&&['index.css'] then 
+      if [- f "index.html"]&&["index.css"] then 
       echo "les fichier à été trouvé"
       else
         exit 1
