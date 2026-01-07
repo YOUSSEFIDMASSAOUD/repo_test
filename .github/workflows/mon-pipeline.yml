@@ -2,48 +2,48 @@ name: First Pipeline
 on:
   push:
     branches: ["main"]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: creation
+      - name: Récupération du code
         uses: actions/checkout@v4
 
   test:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Recuperer le code
-        uses: actions/checkout@v4 # Obligatoire pour que ce job voie vos fichiers
-      - name: Test
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+      - name: Test de présence des fichiers
         run: |
           if [ -f "index.html" ] && [ -f "index.css" ]; then
-            echo "les fichiers ont été trouvés"
+            echo "Succès : les fichiers index.html et index.css ont été trouvés."
           else
-            echo "Erreur : index.html ou index.css manquant"
+            echo "Erreur : index.html ou index.css manquant."
             exit 1
           fi
+
   sonar:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v3
+      - name: Récupération du code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-      - name: 'Analyse SonarQube'
+          fetch-depth: 0 
+      - name: Analyse SonarQube
         uses: SonarSource/sonarqube-scan-action@v3
-        env: 
-          SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: "https://colby-flaxen-anya.ngrok-free.dev"
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
 
   deploy:
     runs-on: ubuntu-latest
-    needs:
-      - sonar
-      - test
-    environment: production
+    needs: [sonar, test] 
     steps:
-      - name: deploy
-        run: echo "deploy avec successs"
+      - name: Deploiement
+        run: echo "Déploiement effectué avec succès sur l'environnement de production"
