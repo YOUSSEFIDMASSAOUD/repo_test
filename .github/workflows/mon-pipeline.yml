@@ -41,6 +41,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: sonar
+    needs: test
     environment: production
     steps:
       - name: deploy
